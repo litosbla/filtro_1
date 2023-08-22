@@ -1,8 +1,5 @@
 
 Manual Python:
-	Temas Basicos: 1
-	Temas intermedios: 1
-	Temas avanzados: 1
 
 Manual JavaScript:
 	Temas Basicos: 1

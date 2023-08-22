@@ -3,20 +3,7 @@
         "Python": {
             "autor": "Roy H Llamas",
             "paginas": "65",
-            "temas": [
-                {
-                    "titulo": "Algoritmos",
-                    "clasificacion": 1
-                },
-                {
-                    "titulo": "Modularidad",
-                    "clasificacion": 2
-                },
-                {
-                    "titulo": "Archivos JSON",
-                    "clasificacion": 3
-                }
-            ]
+            "temas": []
         },
         "JavaScript": {
             "autor": "Vermen Ayala",

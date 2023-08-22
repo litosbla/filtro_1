@@ -70,7 +70,7 @@ def menu():
         try:
             print("="*30)
             print("\tSISTEMA GESTOR DE LIBROS")
-            print("\t1- Mostrar en pantalla todos los manuales\n\t2- Crear un nuevo manual\n\t3- Modificar los manuales\n\t4- Eliminar un manual\n\t5- Generar datos.txt\n\t6- Salir")
+            print("\t1- Mostrar en pantalla todos los manuales\n\t2- Crear un nuevo manual\n\t3- Modificar los manuales\n\t4- Eliminar\n\t5- Generar datos.txt\n\t6- Salir")
             print("="*30)
             op=int(input("\t>> escoja una opción (1-6)"))
             
@@ -144,13 +144,22 @@ def crear_datos():
         break
 
 
-def Actualizar():
+def Actualizar(general,v):
 
     autor=leer_nombre(f"\tDigite el autor: ")
     paginas=str(leer_documento(f"\tDigite las paginas: "))
-    temas=fun_temas()
+    if v!=0:
+        temas=general["manuales"][v]["temas"]
+        if len(temas)==0:
+            temas=fun_temas()
+        else:
+            if validar_otro_ciclo(f"\tParece que tienes algunos temas para {v}, deseas modificarlos tambien? (si/no) "):
+                temas=fun_temas()
+    else:
+        temas=fun_temas()
 
     datos={
+
             "autor":autor,
             "paginas":paginas,
             
@@ -177,7 +186,7 @@ def modificar_datos():
             error("Manual inexistente")
             continue
 
-        datos_agregar=Actualizar()
+        datos_agregar=Actualizar(general,lista[codigo])
         
         general["manuales"][lista[codigo]]=datos_agregar
         
@@ -208,28 +217,56 @@ def eliminar_manual():
         os.system("clear")
         break
 def mostrar_tem(i,elemento):
-    print(f"para el tema # {i+1}")
-    [print(f"{key}={value}") for key,value in elemento.items()]     
+    print(f"\tPara el tema # {i+1}")
+    [print(f"\t{key}={value}") for key,value in elemento.items()]     
 def eliminar_temas():
     general=leer_json()
-    print("Primero es necesario saber en cual Manual quiere eliminar el tema")
-    [print(f"\t{i+1} --> {manual}")for i,manual in enumerate(general["manuales"].keys())]
-    lista=[key for key,value in general["manuales"].items()]
-    codigo=leer_id("\tDigite el indice del manual donde quiere borrar el tema ")-1
+    print("\tPrimero es necesario saber en cual Manual quiere eliminar el tema")
     while True:
-        [mostrar_tem(i,elemento) for i,elemento in enumerate(general["manuales"][lista[codigo]]["temas"])]
-        lista=general["manuales"][lista[codigo]]["temas"]
-        codigo=leer_id("\tDigite el indice del manual que quiere borrar ")-1
+        [print(f"\t{i+1} --> {manual}")for i,manual in enumerate(general["manuales"].keys())]
+        lista=[key for key,value in general["manuales"].items()]
+        codigo=leer_id("\tDigite el indice del manual donde quiere borrar el tema ")-1
         if codigo < 0 or codigo >len(lista):
             error("Manual inexistente")
             continue
+        break
+    while True:
+        [mostrar_tem(i,elemento) for i,elemento in enumerate(general["manuales"][lista[codigo]]["temas"])]
+        lista_1=general["manuales"][lista[codigo]]["temas"]
+        if len(lista_1)==0:
+            error("Parece que no hay ningun tema, agrega uno para poder continuar")
+            break
         
-        general["manuales"][lista[codigo]]["temas"].pop(codigo)
+        codigo_1=leer_id("\tDigite el indice del tema que quiere borrar ")-1
+        
+        if len(lista_1)==1:
+            print("hola")
+            if codigo_1==0:
+
+                general["manuales"][lista[codigo]]["temas"]=[]
+                print("\tNo hay más temas para eliminar")
+                input("\tDigite cualquier tecla para continuar")
+                subir_json(general)
+                os.system("clear")
+                break
+                
+                
+            else:
+                error("\tTema inexistente")
+                continue
+        else:
+            if codigo_1 < 0 or codigo_1 >len(lista_1):
+                error("Tema inexistente")
+                continue
+            else:
+                general["manuales"][lista[codigo]]["temas"].pop(codigo_1)
+                subir_json(general)
 
         
         if validar_otro_ciclo("\t@Desea eliminar otro tema? (si|no)"):
             continue
         subir_json(general)
+        os.system("clear")
         break
 def eliminar_datos():
     while True:
